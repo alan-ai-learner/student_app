@@ -148,7 +148,7 @@ $("body").on("click",".updtbtn", function(e) {
     
     $.ajax({
         type: "POST",
-        url: "http://127.0.0.1:8000//edit/",
+        url: "https://student-regapp.herokuapp.com//edit/",
         dataType:'json',
         data: { 
             id : $('#updatebtn').val(),

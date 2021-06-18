@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     + "<td>" + item.id + "</td>"
                     + "<td>" + item.fname + "</td>"
                     + "<td>" + item.lname + "</td>"
-                    + "<td>"+`<button value=${item.id} id="edit-btn" type="button" class="btn btn-outline-dark btn-sm mx-1 editBtn" data-toggle="modal" data-target="#update">Update</button>`+
-                    `<button value=${item.id} id = "delete-btn" type="button" class="btn btn-outline-dark btn-sm mx-1 delBtn">Delete</button>`
+                    + "<td>"+`<button value=${item.id} id="edit-btn${item.id}" type="button" class="btn btn-outline-dark btn-sm mx-1 editBtn" data-toggle="modal" data-target="#update">Update</button>`+
+                    `<button value=${item.id} id = "delete-btn${item.id}" type="button" class="btn btn-outline-dark btn-sm mx-1 delBtn">Delete</button>`
                  +"</td>"
                     + "</tr>" )
                 });
@@ -38,15 +38,39 @@ $("body").on("click",".delBtn", function(e) {
            
         },
         success: function(result) {
-            window.top.location = window.top.location;
-
-            // alert('Deleted!');
+            $.ajax({  
+        
+                url: 'https://student-regapp.herokuapp.com//api/student-list/',  
+                cache: false,
+                type: 'GET',  
+                dataType: 'json',  
+                
+                success: function (data){
+                     $("#tbody").empty();                    
+                    $.each(data.all_student, function (i, item) {
+                        // console.log(item.id);
+                        
+                        $("#tbody").append(
+                            "<tr>"
+                            + "<td>" + item.id + "</td>"
+                            + "<td>" + item.fname + "</td>"
+                            + "<td>" + item.lname + "</td>"
+                            + "<td>"+`<button value=${item.id} id="edit-btn${item.id}" type="button" class="btn btn-outline-dark btn-sm mx-1 editBtn" data-toggle="modal" data-target="#update">Update</button>`+
+                            `<button value=${item.id} id = "delete-btn${item.id}" type="button" class="btn btn-outline-dark btn-sm mx-1 delBtn">Delete</button>`
+                         +"</td>"
+                            + "</tr>" )
+                        });
+                    }
+            });  
+            
         },
         error: function(result) {
             alert('error');
         }
     });
 });
+
+
 
 // add records
 $("body").on("click",".addsub", function(e) {
@@ -61,7 +85,33 @@ $("body").on("click",".addsub", function(e) {
             lname:$('#lname').val()
         },
         success: function(data) {
-        window.top.location = window.top.location;
+            $.ajax({  
+        
+                url: 'https://student-regapp.herokuapp.com//api/student-list/',  
+                cache: false,
+                type: 'GET',  
+                dataType: 'json',  
+                
+                success: function (data){
+                     $("#tbody").empty();                    
+                    $.each(data.all_student, function (i, item) {
+                        // console.log(item.id);
+                        
+                        $("#tbody").append(
+                            "<tr>"
+                            + "<td>" + item.id + "</td>"
+                            + "<td>" + item.fname + "</td>"
+                            + "<td>" + item.lname + "</td>"
+                            + "<td>"+`<button value=${item.id} id="edit-btn${item.id}"type="button" class="btn btn-outline-dark btn-sm mx-1 editBtn" data-toggle="modal" data-target="#update">Update</button>`+
+                            `<button value=${item.id} id = "delete-btn${item.id}" type="button" class="btn btn-outline-dark btn-sm mx-1 delBtn">Delete</button>`
+                         +"</td>"
+                            + "</tr>" )
+                        });
+                    }
+            });  
+
+            $('#fname').val('');
+            $('#lname').val(''); 
             
         },
         error: function(result) {
@@ -73,6 +123,9 @@ $("body").on("click",".addsub", function(e) {
 // Predefined update values
 $("body").on("click",".editBtn", function(e) {
     e.preventDefault();
+    var upid = $(this).val()
+    $('#updatebtn').val(upid);
+    // console.log($('#updatebtn').val())
     $.ajax({
         type: "POST",
         url: "https://student-regapp.herokuapp.com//api/single/",
@@ -83,9 +136,11 @@ $("body").on("click",".editBtn", function(e) {
             $('#fnameup').val(result.fname);
             $('#lnameup').val(result.lname);
             
+            
      }
     });
 });
+
 
 // update button
 $("body").on("click",".updtbtn", function(e) {
@@ -93,15 +148,38 @@ $("body").on("click",".updtbtn", function(e) {
     
     $.ajax({
         type: "POST",
-        url: "https://student-regapp.herokuapp.com//edit/",
+        url: "http://127.0.0.1:8000//edit/",
         dataType:'json',
         data: { 
-            id : $('#edit-btn').val(),
+            id : $('#updatebtn').val(),
             fname:$('#fnameup').val(),
             lname:$('#lnameup').val()
         },
         success: function(data) {
-        window.top.location = window.top.location;
+            $.ajax({  
+        
+                url: 'https://student-regapp.herokuapp.com//api/student-list/',  
+                cache: false,
+                type: 'GET',  
+                dataType: 'json',  
+                
+                success: function (data){
+                    $("#tbody").empty(); 
+                    $.each(data.all_student, function (i, item) {
+                        
+                        
+                        $("#tbody").append(
+                            "<tr>"
+                            + "<td>" + item.id + "</td>"
+                            + "<td>" + item.fname + "</td>"
+                            + "<td>" + item.lname + "</td>"
+                            + "<td>"+`<button value=${item.id} id="edit-btn${item.id}" type="button" class="btn btn-outline-dark btn-sm mx-1 editBtn" data-toggle="modal" data-target="#update">Update</button>`+
+                            `<button value=${item.id} id = "delete-btn${item.id}" type="button" class="btn btn-outline-dark btn-sm mx-1 delBtn">Delete</button>`
+                         +"</td>"
+                            + "</tr>" )
+                        });
+                    }
+            });  
             
         },
         error: function(result) {
